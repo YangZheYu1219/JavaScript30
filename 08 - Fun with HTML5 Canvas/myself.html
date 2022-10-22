@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HTML5 Canvas</title>
+</head>
+<body>
+<canvas id="draw" width="1600" height="1600"></canvas>
+<script>
+    
+    let canvas = document.querySelector('#draw')
+    const ctx = canvas.getContext('2d');
+    let colorDeg = 0
+    ctx.strokeStyle = `hsl(${colorDeg}, 100%, 50%)` //線條顏色
+    let lineWidth = 50
+    ctx.lineWidth = lineWidth //線條寬度
+    let direction = -1
+    ctx.lineCap = 'round' //線條邊框
+    ctx.lineJoin = 'round' //線條連接處
+
+    let drawing = false
+    let x = 0;
+    let y = 0;
+    canvas.addEventListener('mousedown', e => {
+        drawing = true;
+        [x, y] = [e.offsetX, e.offsetY] //找出x、y座標
+    })
+    canvas.addEventListener('mousemove', e => {
+        if (!drawing) return;
+
+        ctx.beginPath() //開始畫\
+        colorDeg = colorDeg+1 < 360 ? colorDeg+1 : 0
+        ctx.strokeStyle = `hsl(${colorDeg}, 100%, 50%)`
+        // lineWidth = lineWidth < 50 ? lineWidth + 1 : 1
+        // ctx.lineWidth = lineWidth
+        if (lineWidth < 1 || lineWidth > 50) {
+            //設置一個direction判斷 超過臨界點(1~50) 要轉換的方向
+            direction *= -1
+        }
+        lineWidth += direction
+        ctx.lineWidth = lineWidth
+        console.log(lineWidth)
+        ctx.moveTo(x, y)
+        ctx.lineTo(e.offsetX, e.offsetY) //將線從原本mousedown的x、y -> 當前x、y座標
+        x = e.offsetX, y = e.offsetY
+//重新調整位置，紀錄當前x、y座標
+        ctx.stroke() //開始畫
+    })
+    canvas.addEventListener('mouseup', ()=> {
+        drawing = false
+    })
+    canvas.addEventListener('mouseleave', ()=> {
+        drawing = false
+    })
+</script>
+
+<style>
+  html, body {
+    margin: 0;
+  }
+  #draw {
+    border: 1px solid grey
+  }
+</style>
+
+</body>
+</html>
