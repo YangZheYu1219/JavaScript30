@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mouse Shadow</title>
+</head>
+<body>
+
+  <div class="hero">
+    <h1 contenteditable>🔥WOAH!</h1>
+  </div>
+
+  <style>
+  html {
+    color: black;
+    font-family: sans-serif;
+  }
+
+  body {
+    margin: 0;
+  }
+
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: black;
+  }
+
+  h1 {
+    text-shadow: 10px 10px 0 rgba(0,0,0,1);
+    font-size: 100px;
+  }
+  </style>
+
+<script>
+
+    let length = 100
+    let text = document.querySelector("h1")
+    document.querySelector('.hero').addEventListener("mousemove", function(e) {
+        //第一步: 監聽mousemove
+        //第二步: 計算移動軌跡(百分比)
+        let { offsetX, offsetY } = e  // let x = e.offsetX, y = offsetY
+        if(e.target !== this) { 
+            //offset是以一個dom外面的視窗作為計算，如果視窗內有兩個dom，
+            //另一個dom的offset會跑掉，所以要把一個dom物件加上外面的寬高
+            offsetX += e.target.offsetLeft
+            offsetY += e.target.offsetTop
+        }
+        // *2 - length 是為了計算反方向的offset 不然只有單一方向(0~1) 應該是(-1~1)雙向
+        let lengthX = Math.floor((offsetX / this.offsetWidth) * length) * 2 - length
+        let lengthY = Math.floor((offsetY / this.offsetHeight) * length) * 2 - length
+        //第三步 視覺滾動 視差的感覺
+        text.style.textShadow = `
+        ${lengthX * -3}px ${lengthY * -3}px 3px rgba(255, 0, 0, 0.8),
+        ${lengthX * -2}px ${lengthY * -2}px 2px rgba(0, 255, 0, 0.8),
+        ${lengthX * -1}px ${lengthY * -1}px 1px rgba(0, 0, 255, 0.8)
+        `
+    })
+</script>
+</body>
+</html>
